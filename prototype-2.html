@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HORSEMEDIC — Equine Emergency Dispatch & Mobile Veterinary Care</title>
+<meta name="description" content="24/7 equine veterinary dispatch. Board-certified vets to your stable in 60 minutes. Emergency call-out, lameness, dentistry, diagnostics." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0a0e0f;
+    --panel:#10161a;
+    --panel-2:#0d1417;
+    --line:#1e2a30;
+    --line-bright:#2a3a42;
+    --orange:#ff6a1a;
+    --orange-dim:#c4500f;
+    --green:#3ddc84;
+    --amber:#ffc24b;
+    --txt:#dfe7ea;
+    --txt-dim:#7e8e95;
+    --txt-faint:#4d5b61;
+    --white:#f4f8f9;
+    --mono:"IBM Plex Mono",ui-monospace,monospace;
+    --sans:"Archivo",system-ui,sans-serif;
+    --maxw:1280px;
+    --ease:cubic-bezier(.2,.7,.2,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--sans);background:var(--bg);color:var(--txt);
+    line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+    background-image:
+      linear-gradient(var(--line) 1px,transparent 1px),
+      linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:64px 64px;
+    background-position:center top;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(255,106,26,.10),transparent 70%);
+  }
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  ::selection{background:var(--orange);color:#000}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative;z-index:1}
+  .mono{font-family:var(--mono)}
+  .tag{
+    font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--orange);display:inline-flex;align-items:center;gap:.5em;
+  }
+  .tag::before{content:"[";color:var(--txt-faint)}
+  .tag::after{content:"]";color:var(--txt-faint)}
+  h1,h2,h3{font-weight:800;line-height:1.02;letter-spacing:-.02em;color:var(--white)}
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
+
+  /* buttons */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:.6em;
+    font-family:var(--mono);font-weight:600;font-size:.86rem;letter-spacing:.04em;text-transform:uppercase;
+    padding:1.05em 1.6em;background:var(--orange);color:#08110a;border:1px solid var(--orange);
+    cursor:pointer;transition:.25s var(--ease);clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+  }
+  .btn:hover{background:#fff;border-color:#fff;color:#000}
+  .btn--ghost{background:transparent;color:var(--txt);border:1px solid var(--line-bright)}
+  .btn--ghost:hover{background:var(--panel);border-color:var(--orange);color:var(--white)}
+
+  /* nav */
+  header.nav{position:fixed;top:0;left:0;right:0;z-index:50;transition:.3s var(--ease);
+    border-bottom:1px solid transparent;backdrop-filter:blur(0)}
+  header.nav.stuck{background:rgba(10,14,15,.85);backdrop-filter:blur(14px);border-bottom-color:var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:74px;gap:24px}
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand img{height:34px;width:auto}
+  .brand b{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;color:var(--txt-dim);border-left:1px solid var(--line-bright);padding-left:11px;text-transform:uppercase}
+  .nav-links{display:flex;gap:30px;font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--txt-dim)}
+  .nav-links a{transition:.2s}.nav-links a:hover{color:var(--white)}
+  .nav-cta{display:flex;align-items:center;gap:16px}
+  .nav-call{font-family:var(--mono);font-size:.82rem;color:var(--white);display:flex;align-items:center;gap:.5em}
+  .nav-call .pulse{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(61,220,132,.7);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(61,220,132,.6)}70%{box-shadow:0 0 0 8px rgba(61,220,132,0)}100%{box-shadow:0 0 0 0 rgba(61,220,132,0)}}
+  .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px}
+  .burger span{width:24px;height:2px;background:var(--white);transition:.3s}
+
+  /* hero */
+  .hero{padding:150px 0 70px;position:relative}
+  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:0;border:1px solid var(--line);background:var(--panel-2)}
+  .hero-left{padding:54px 48px 48px}
+  .statusbar{display:flex;align-items:center;gap:18px;font-family:var(--mono);font-size:.74rem;color:var(--txt-dim);padding-bottom:26px;margin-bottom:30px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .statusbar .live{color:var(--green);display:flex;align-items:center;gap:.5em}
+  .statusbar .live .pulse{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+  .hero h1{font-size:clamp(2.5rem,5.4vw,4.4rem);margin:8px 0 22px}
+  .hero h1 em{font-style:normal;color:var(--orange)}
+  .hero p.lead{font-size:1.12rem;color:var(--txt-dim);max-width:46ch;margin-bottom:34px}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:34px}
+  .hero-meta{display:flex;gap:30px;font-family:var(--mono);font-size:.78rem;color:var(--txt-faint);flex-wrap:wrap}
+  .hero-meta b{color:var(--txt);font-weight:600}
+  .hero-right{position:relative;border-left:1px solid var(--line);overflow:hidden;min-height:440px}
+  .hero-right img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(.3) contrast(1.05) brightness(.85)}
+  .hero-right::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,20,23,.1),rgba(13,20,23,.65));mix-blend:multiply}
+  .hero-readout{position:absolute;left:18px;right:18px;bottom:18px;z-index:2;font-family:var(--mono);font-size:.72rem;
+    background:rgba(10,14,15,.78);backdrop-filter:blur(8px);border:1px solid var(--line-bright);padding:14px 16px;display:grid;gap:7px}
+  .hero-readout .row{display:flex;justify-content:space-between;color:var(--txt-dim)}
+  .hero-readout .row b{color:var(--green)}
+  .hero-readout .row .amber{color:var(--amber)}
+
+  /* dispatch strip */
+  .dispatch{border:1px solid var(--orange);border-top:none;background:linear-gradient(90deg,rgba(255,106,26,.12),rgba(255,106,26,.02));
+    padding:22px 48px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  .dispatch .l{display:flex;align-items:center;gap:16px}
+  .dispatch .siren{width:38px;height:38px;border:1px solid var(--orange);display:grid;place-items:center;color:var(--orange);font-size:1.2rem;animation:blink 1.4s infinite}
+  @keyframes blink{50%{background:var(--orange);color:#000}}
+  .dispatch .txt b{display:block;font-size:1.05rem;color:var(--white)}
+  .dispatch .txt span{font-family:var(--mono);font-size:.76rem;color:var(--txt-dim)}
+  .dispatch a.line{font-family:var(--mono);font-size:1.5rem;font-weight:600;color:var(--orange);letter-spacing:.02em}
+
+  /* section scaffold */
+  section.blk{padding:90px 0;position:relative}
+  .blk-head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin-bottom:46px;flex-wrap:wrap}
+  .blk-head h2{font-size:clamp(2rem,3.6vw,3rem)}
+  .blk-head .idx{font-family:var(--mono);font-size:.78rem;color:var(--txt-faint)}
+  .blk-head p{color:var(--txt-dim);max-width:42ch}
+
+  /* metrics */
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);background:var(--panel-2)}
+  .metric{padding:34px 28px;border-right:1px solid var(--line);position:relative}
+  .metric:last-child{border-right:none}
+  .metric .k{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--txt-faint);margin-bottom:14px}
+  .metric .v{font-size:2.9rem;font-weight:800;color:var(--white);line-height:1;font-variant-numeric:tabular-nums}
+  .metric .v small{font-size:1.3rem;color:var(--orange)}
+  .metric .bar{height:3px;background:var(--line);margin-top:18px;overflow:hidden}
+  .metric .bar i{display:block;height:100%;background:var(--orange);width:0;transition:width 1.4s var(--ease)}
+
+  /* services */
+  .svc{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+  .svc .card{background:var(--panel);padding:34px 30px 36px;transition:.3s var(--ease);position:relative;min-height:220px;display:flex;flex-direction:column}
+  .svc .card:hover{background:var(--panel-2)}
+  .svc .card .no{font-family:var(--mono);font-size:.74rem;color:var(--txt-faint)}
+  .svc .card h3{font-size:1.32rem;margin:18px 0 10px;color:var(--white)}
+  .svc .card p{color:var(--txt-dim);font-size:.96rem;flex:1}
+  .svc .card .ln{margin-top:18px;font-family:var(--mono);font-size:.74rem;color:var(--orange);opacity:0;transform:translateX(-6px);transition:.3s}
+  .svc .card:hover .ln{opacity:1;transform:none}
+  .svc .card::before{content:"";position:absolute;left:0;top:0;width:0;height:2px;background:var(--orange);transition:.3s var(--ease)}
+  .svc .card:hover::before{width:100%}
+
+  /* split feature */
+  .split{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);background:var(--panel-2)}
+  .split .media{position:relative;overflow:hidden;min-height:480px}
+  .split .media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(.25) contrast(1.05) brightness(.9)}
+  .split .media::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(13,20,23,.3),transparent 60%)}
+  .split .body{padding:56px 50px;border-left:1px solid var(--line)}
+  .split .body h2{font-size:clamp(1.9rem,3vw,2.6rem);margin:16px 0 18px}
+  .split .feat{display:flex;gap:18px;padding:22px 0;border-top:1px solid var(--line)}
+  .split .feat .n{font-family:var(--mono);color:var(--orange);font-size:.86rem;min-width:34px}
+  .split .feat h4{font-size:1.06rem;color:var(--white);margin-bottom:5px}
+  .split .feat p{color:var(--txt-dim);font-size:.94rem}
+
+  /* protocol / steps */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .step{border:1px solid var(--line);background:var(--panel);padding:32px 28px;position:relative}
+  .step .n{font-family:var(--mono);font-size:.78rem;color:var(--orange);border:1px solid var(--line-bright);display:inline-grid;place-items:center;width:38px;height:38px;margin-bottom:20px}
+  .step h3{font-size:1.2rem;color:var(--white);margin-bottom:9px}
+  .step p{color:var(--txt-dim);font-size:.94rem}
+
+  /* quote band */
+  .qband{position:relative;border:1px solid var(--line);overflow:hidden;padding:80px 50px}
+  .qband img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(.6) brightness(.32)}
+  .qband .inner{position:relative;z-index:2;max-width:760px}
+  .qband blockquote{font-size:clamp(1.5rem,3vw,2.3rem);font-weight:700;color:var(--white);line-height:1.2;letter-spacing:-.01em}
+  .qband cite{display:block;margin-top:24px;font-family:var(--mono);font-size:.82rem;color:var(--orange);font-style:normal}
+
+  /* testimonials */
+  .tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+  .tcard{background:var(--panel);padding:34px 30px}
+  .tcard .stars{color:var(--orange);font-family:var(--mono);font-size:.82rem;margin-bottom:16px}
+  .tcard p{color:var(--txt);font-size:1rem;margin-bottom:22px}
+  .tcard .who{display:flex;align-items:center;gap:13px}
+  .tcard .av{width:42px;height:42px;border:1px solid var(--line-bright);display:grid;place-items:center;font-family:var(--mono);font-size:.82rem;color:var(--orange)}
+  .tcard .who b{display:block;color:var(--white);font-size:.94rem}
+  .tcard .who span{font-family:var(--mono);font-size:.74rem;color:var(--txt-faint)}
+
+  /* booking */
+  .book{display:grid;grid-template-columns:.9fr 1.1fr;border:1px solid var(--line);background:var(--panel-2)}
+  .book .info{padding:54px 46px}
+  .book .info h2{font-size:clamp(1.9rem,3vw,2.6rem);margin:14px 0 18px}
+  .book .info p{color:var(--txt-dim);margin-bottom:26px}
+  .book .info .callbig{font-family:var(--mono);font-size:1.6rem;color:var(--orange);display:block;margin-bottom:10px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+  .chips span{font-family:var(--mono);font-size:.72rem;color:var(--txt-dim);border:1px solid var(--line);padding:6px 11px}
+  form.bf{padding:46px;border-left:1px solid var(--line);display:grid;gap:16px}
+  form.bf .fld{display:grid;gap:7px}
+  form.bf label{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--txt-faint)}
+  form.bf input,form.bf select,form.bf textarea{background:var(--bg);border:1px solid var(--line-bright);color:var(--txt);padding:13px 14px;font-family:var(--mono);font-size:.88rem}
+  form.bf input:focus,form.bf select:focus,form.bf textarea:focus{outline:none;border-color:var(--orange)}
+  form.bf .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  form.bf .fine{font-family:var(--mono);font-size:.72rem;color:var(--txt-faint);text-align:center}
+
+  /* faq */
+  .faq{border:1px solid var(--line);background:var(--panel-2)}
+  .qa{border-bottom:1px solid var(--line)}
+  .qa:last-child{border-bottom:none}
+  .qa button{width:100%;text-align:left;background:none;border:none;color:var(--white);font-family:var(--sans);font-weight:700;font-size:1.08rem;padding:24px 28px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px}
+  .qa button .ic{font-family:var(--mono);color:var(--orange);transition:.3s}
+  .qa.open button .ic{transform:rotate(45deg)}
+  .qa .ans{max-height:0;overflow:hidden;transition:max-height .4s var(--ease)}
+  .qa .ans p{padding:0 28px 24px;color:var(--txt-dim)}
+
+  /* final */
+  .final{position:relative;border:1px solid var(--orange);overflow:hidden;padding:90px 50px;text-align:center}
+  .final img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(.5) brightness(.3)}
+  .final .inner{position:relative;z-index:2}
+  .final h2{font-size:clamp(2.2rem,4.5vw,3.8rem);margin-bottom:18px}
+  .final h2 em{font-style:normal;color:var(--orange)}
+  .final p{color:var(--txt-dim);max-width:48ch;margin:0 auto 32px}
+  .final .hero-cta{justify-content:center}
+
+  /* footer */
+  footer{border-top:1px solid var(--line);padding:54px 0 40px;margin-top:80px}
+  .foot{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:flex-start}
+  .foot .brand img{height:30px}
+  .foot p{color:var(--txt-faint);font-family:var(--mono);font-size:.76rem;max-width:34ch;margin-top:14px}
+  .foot .cols{display:flex;gap:60px;flex-wrap:wrap}
+  .foot .col b{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--txt-dim);display:block;margin-bottom:14px}
+  .foot .col a{display:block;color:var(--txt-faint);font-size:.9rem;margin-bottom:9px;transition:.2s}
+  .foot .col a:hover{color:var(--orange)}
+  .foot-base{margin-top:46px;padding-top:24px;border-top:1px solid var(--line);font-family:var(--mono);font-size:.72rem;color:var(--txt-faint);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+  /* mobile call bar */
+  .mbar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:none;background:var(--orange);padding:14px;text-align:center}
+  .mbar a{font-family:var(--mono);font-weight:600;color:#000;font-size:.95rem}
+
+  @media(max-width:980px){
+    body{background-size:48px 48px}
+    .nav-links{display:none}
+    .burger{display:flex}
+    .nav-call .txt{display:none}
+    .mobile-menu{position:fixed;inset:74px 0 auto 0;background:var(--panel);border-bottom:1px solid var(--line);transform:translateY(-120%);transition:.4s var(--ease);z-index:49;padding:24px}
+    .mobile-menu.open{transform:none}
+    .mobile-menu a{display:block;font-family:var(--mono);padding:14px 0;border-bottom:1px solid var(--line);color:var(--txt)}
+    .hero-grid,.split,.book{grid-template-columns:1fr}
+    .hero-right{border-left:none;border-top:1px solid var(--line);min-height:300px}
+    .split .body,.book .info+form.bf,form.bf{border-left:none;border-top:1px solid var(--line)}
+    .metrics{grid-template-columns:1fr 1fr}
+    .metric:nth-child(2){border-right:none}
+    .metric{border-bottom:1px solid var(--line)}
+    .svc,.tgrid{grid-template-columns:1fr}
+    .steps{grid-template-columns:1fr}
+    .dispatch{padding:20px 24px}
+    .dispatch a.line{font-size:1.2rem}
+    .hero-left{padding:36px 26px}
+    .split .body,.book .info{padding:38px 28px}
+    .mbar{display:block}
+    footer{margin-bottom:56px}
+  }
+  @media(max-width:560px){.metrics{grid-template-columns:1fr}.metric{border-right:none}}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top">
+      <img src="assets/logo.png" alt="HORSEMEDIC" />
+      <b>Equine Dispatch</b>
+    </a>
+    <nav class="nav-links">
+      <a href="#services">Services</a>
+      <a href="#why">Why us</a>
+      <a href="#protocol">Protocol</a>
+      <a href="#book">Book</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="nav-call" href="tel:+18005544673"><span class="pulse"></span><span class="txt mono">24/7 · +1 800 554 HORSE</span></a>
+      <a class="btn" href="#book">Request Vet</a>
+      <div class="burger" id="burger"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mm">
+    <a href="#services">Services</a>
+    <a href="#why">Why us</a>
+    <a href="#protocol">Protocol</a>
+    <a href="#book">Book a visit</a>
+    <a href="tel:+18005544673">Call 24/7 · +1 800 554 HORSE</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-left">
+        <div class="statusbar">
+          <span class="live"><span class="pulse"></span>SYSTEM LIVE</span>
+          <span>· 4 VETS ON CALL</span>
+          <span>· AVG RESPONSE 58 MIN</span>
+        </div>
+        <span class="tag">Mobile Equine Veterinary Care</span>
+        <h1 class="reveal in">Your vet, dispatched <em>to your stable.</em></h1>
+        <p class="lead reveal in">Board-certified equine vets, on call around the clock. Emergencies, lameness, dentistry and diagnostics — handled where your horse stands.</p>
+        <div class="hero-cta reveal in">
+          <a class="btn" href="#book">Request a vet →</a>
+          <a class="btn btn--ghost" href="tel:+18005544673">Call emergency line</a>
+        </div>
+        <div class="hero-meta">
+          <span>★ <b>4.97</b> / 5 · 1,200+ reviews</span>
+          <span><b>RCVS</b>-registered surgeons</span>
+          <span>Coverage in <b>40-mile</b> radius</span>
+        </div>
+      </div>
+      <div class="hero-right">
+        <img src="assets/hero.jpg" alt="Horse at stable" />
+        <div class="hero-readout">
+          <div class="row"><span>STATUS</span><b>● ACCEPTING CALLS</b></div>
+          <div class="row"><span>NEAREST UNIT</span><span class="amber">6.2 MI · UNIT 03</span></div>
+          <div class="row"><span>ETA TO YARD</span><b>~42 MIN</b></div>
+        </div>
+      </div>
+    </div>
+    <!-- dispatch strip -->
+    <div class="dispatch">
+      <div class="l">
+        <div class="siren">✚</div>
+        <div class="txt">
+          <b>Equine emergency?</b>
+          <span class="mono">Colic, injury, foaling — we answer 24/7/365</span>
+        </div>
+      </div>
+      <a class="line" href="tel:+18005544673">+1 800 554 HORSE</a>
+    </div>
+  </div>
+</section>
+
+<!-- METRICS -->
+<section class="blk" style="padding-top:30px">
+  <div class="wrap">
+    <div class="metrics reveal">
+      <div class="metric"><div class="k">Years in practice</div><div class="v" data-count="12">0</div><div class="bar"><i data-w="80%"></i></div></div>
+      <div class="metric"><div class="k">Horses treated</div><div class="v" data-count="8400">0<small>+</small></div><div class="bar"><i data-w="92%"></i></div></div>
+      <div class="metric"><div class="k">Avg. on-site (min)</div><div class="v" data-count="60">0</div><div class="bar"><i data-w="70%"></i></div></div>
+      <div class="metric"><div class="k">Emergency cover</div><div class="v">24/7</div><div class="bar"><i data-w="100%"></i></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="blk" id="services">
+  <div class="wrap">
+    <div class="blk-head reveal">
+      <div>
+        <span class="tag">Capabilities</span>
+        <h2 style="margin-top:14px">Full-service equine medicine —<br/>at the yard, not the clinic.</h2>
+      </div>
+      <p>Everything a hospital offers, brought to your stable with mobile imaging and a fully-stocked vet unit.</p>
+    </div>
+    <div class="svc reveal">
+      <div class="card"><div class="no">01 / EMERGENCY</div><h3>Emergency Call-Out</h3><p>Colic, lacerations, choke, foaling complications — a vet on the road within the hour, any hour.</p><div class="ln">→ 24/7 dispatch</div></div>
+      <div class="card"><div class="no">02 / DENTAL</div><h3>Equine Dentistry</h3><p>Motorised and hand floating, extractions and routine dental exams with sedation on site.</p><div class="ln">→ Book routine</div></div>
+      <div class="card"><div class="no">03 / LOCOMOTOR</div><h3>Lameness Workups</h3><p>Flexion tests, nerve blocks and gait analysis to find the source and build a recovery plan.</p><div class="ln">→ Investigate</div></div>
+      <div class="card"><div class="no">04 / IMAGING</div><h3>Digital Imaging</h3><p>Portable digital X-ray and ultrasound, read on the spot — no trailering a sore horse.</p><div class="ln">→ On-site scans</div></div>
+      <div class="card"><div class="no">05 / WELLNESS</div><h3>Vaccines & Wellness</h3><p>Tailored vaccination, worming and health programmes that keep the whole yard protected.</p><div class="ln">→ Plan cover</div></div>
+      <div class="card"><div class="no">06 / VETTING</div><h3>Pre-Purchase Vetting</h3><p>Thorough 5-stage examinations and clear, honest reports before you buy.</p><div class="ln">→ Schedule vetting</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SPLIT / WHY -->
+<section class="blk" id="why">
+  <div class="wrap">
+    <div class="split reveal">
+      <div class="media"><img src="assets/horse-eye.jpg" alt="Horse close up" /></div>
+      <div class="body">
+        <span class="tag">Why owners choose us</span>
+        <h2>Hospital-grade medicine,<br/>house-call warmth.</h2>
+        <div class="feat"><div class="n">01</div><div><h4>Specialists, not generalists</h4><p>Our vets hold advanced equine certifications — the same people you'd be referred to, coming straight to you.</p></div></div>
+        <div class="feat"><div class="n">02</div><div><h4>The full kit travels</h4><p>Digital X-ray, ultrasound, lab diagnostics and surgical capability in every unit. No "come back to the clinic."</p></div></div>
+        <div class="feat"><div class="n">03</div><div><h4>One vet who knows your horse</h4><p>Continuity of care — the same clinician follows your horse's history from first call to full recovery.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROTOCOL -->
+<section class="blk" id="protocol">
+  <div class="wrap">
+    <div class="blk-head reveal">
+      <div><span class="tag">Dispatch protocol</span><h2 style="margin-top:14px">Help for your horse in three steps.</h2></div>
+    </div>
+    <div class="steps reveal">
+      <div class="step"><div class="n">1</div><h3>Call or request</h3><p>Tell us what's happening. Our triage line is staffed by equine nurses, day and night.</p></div>
+      <div class="step"><div class="n">2</div><h3>We dispatch</h3><p>The nearest unit rolls out with everything needed. You get a live ETA and direct line to your vet.</p></div>
+      <div class="step"><div class="n">3</div><h3>Treated on site</h3><p>Diagnosis, treatment and a clear plan — delivered in your yard, with follow-up built in.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE BAND -->
+<section class="blk">
+  <div class="wrap">
+    <div class="qband reveal">
+      <img src="assets/care.jpg" alt="Horse in motion" />
+      <div class="inner">
+        <blockquote>"They had a vet at my yard before I'd finished panicking. My mare's colic was caught early — she's still with us because of HORSEMEDIC."</blockquote>
+        <cite>— Rachel H., eventing yard owner · Surrey</cite>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="blk" id="voices">
+  <div class="wrap">
+    <div class="blk-head reveal"><div><span class="tag">Field reports</span><h2 style="margin-top:14px">Trusted by people who<br/>know horses best.</h2></div></div>
+    <div class="tgrid reveal">
+      <div class="tcard"><div class="stars">★★★★★</div><p>"Same-day lameness workup that three other vets couldn't crack. Found it in an hour with portable imaging."</p><div class="who"><div class="av">RH</div><div><b>Rebecca Hale</b><span>Dressage rider</span></div></div></div>
+      <div class="tcard"><div class="stars">★★★★★</div><p>"The 24/7 line is the real deal — answered at 3am, vet on site by 4. Worth every penny for the peace of mind."</p><div class="who"><div class="av">DP</div><div><b>Daniel Park</b><span>Stud farm manager</span></div></div></div>
+      <div class="tcard"><div class="stars">★★★★★</div><p>"Same vet has cared for my horses for years now. She knows their quirks better than I do. That continuity is rare."</p><div class="who"><div class="av">SM</div><div><b>Sofia Marlowe</b><span>Private owner, 4 horses</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section class="blk" id="book">
+  <div class="wrap">
+    <div class="book reveal">
+      <div class="info">
+        <span class="tag">Request a visit</span>
+        <h2>Get your horse seen —<br/>often the same day.</h2>
+        <p>Non-urgent bookings via the form. For anything time-critical, call the line — it's always open.</p>
+        <a class="callbig" href="tel:+18005544673">+1 800 554 HORSE</a>
+        <span class="mono" style="font-size:.78rem;color:var(--txt-faint)">EMERGENCY · 24 / 7 / 365</span>
+        <div class="chips">
+          <span>Surrey</span><span>Hampshire</span><span>West Sussex</span><span>Berkshire</span><span>+ 40mi radius</span>
+        </div>
+      </div>
+      <form class="bf" onsubmit="bookSubmit(event)">
+        <div class="two">
+          <div class="fld"><label>Your name</label><input required placeholder="Jane Rider" /></div>
+          <div class="fld"><label>Phone</label><input required placeholder="+1 ___ ___ ____" /></div>
+        </div>
+        <div class="fld"><label>Yard / postcode</label><input required placeholder="Stable name or postcode" /></div>
+        <div class="two">
+          <div class="fld"><label>Service</label><select><option>Emergency</option><option>Lameness</option><option>Dentistry</option><option>Vaccines / wellness</option><option>Pre-purchase vetting</option></select></div>
+          <div class="fld"><label>Horses</label><select><option>1</option><option>2</option><option>3</option><option>4+</option></select></div>
+        </div>
+        <div class="fld"><label>What's going on?</label><textarea rows="3" placeholder="Brief description..."></textarea></div>
+        <button class="btn" type="submit" style="width:100%">Send request →</button>
+        <p class="fine">We reply within 30 min during hours · Emergencies → call the line</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="blk" id="faq">
+  <div class="wrap" style="max-width:880px">
+    <div class="blk-head reveal" style="justify-content:center;text-align:center;flex-direction:column;align-items:center">
+      <span class="tag">Questions</span><h2 style="margin-top:14px">Everything you might ask.</h2>
+    </div>
+    <div class="faq reveal">
+      <div class="qa"><button>Do you really come out at night? <span class="ic">+</span></button><div class="ans"><p>Yes — genuinely 24/7/365. Our emergency line is staffed every hour of every day, and a vet is always on call for true emergencies like colic, severe injury or foaling.</p></div></div>
+      <div class="qa"><button>How fast can a vet reach me? <span class="ic">+</span></button><div class="ans"><p>Within our 40-mile coverage area our average on-site time is around 60 minutes for emergencies. You'll get a live ETA the moment a unit is dispatched.</p></div></div>
+      <div class="qa"><button>What areas do you cover? <span class="ic">+</span></button><div class="ans"><p>Surrey, Hampshire, West Sussex and Berkshire, plus a 40-mile radius around our base. Not sure if you're in range? Call and we'll confirm instantly.</p></div></div>
+      <div class="qa"><button>Can you do imaging at the yard? <span class="ic">+</span></button><div class="ans"><p>Every unit carries portable digital X-ray and ultrasound, read on the spot. No need to trailer a sore or anxious horse to a clinic.</p></div></div>
+      <div class="qa"><button>How does payment work? <span class="ic">+</span></button><div class="ans"><p>Transparent call-out and treatment pricing given up front. We work directly with the major equine insurers and can bill them on eligible claims.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL -->
+<section class="blk" style="padding-bottom:0">
+  <div class="wrap">
+    <div class="final reveal">
+      <img src="assets/foal.jpg" alt="Mare and foal" />
+      <div class="inner">
+        <span class="tag" style="justify-content:center">Ready when you are</span>
+        <h2 style="margin-top:16px">Care your horse can <em>feel.</em></h2>
+        <p>Join the owners who never worry about who to call. We're on the line, on the road, and on your side.</p>
+        <div class="hero-cta">
+          <a class="btn" href="#book">Request a vet →</a>
+          <a class="btn btn--ghost" href="tel:+18005544673">Call +1 800 554 HORSE</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="#top"><img src="assets/logo.png" alt="HORSEMEDIC" /></a>
+        <p>Mobile equine veterinary dispatch. On call, on the road, around the clock.</p>
+      </div>
+      <div class="cols">
+        <div class="col"><b>Services</b><a href="#services">Emergency</a><a href="#services">Lameness</a><a href="#services">Dentistry</a><a href="#services">Imaging</a></div>
+        <div class="col"><b>Company</b><a href="#why">About</a><a href="#voices">Reviews</a><a href="#protocol">How it works</a><a href="#book">Contact</a></div>
+        <div class="col"><b>24/7 Line</b><a href="tel:+18005544673">+1 800 554 HORSE</a><a href="#book">Request a visit</a></div>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>© 2026 HORSEMEDIC — Concept landing page (Prototype 2)</span>
+      <span>Imagery: Unsplash &amp; Flickr (CC) · Fictional brand for design demo</span>
+    </div>
+  </div>
+</footer>
+
+<a class="btn mbar" href="tel:+18005544673">✚ Call 24/7 Emergency Line</a>
+
+<script>
+  const nav=document.getElementById('nav');
+  addEventListener('scroll',()=>nav.classList.toggle('stuck',scrollY>20));
+  const burger=document.getElementById('burger'),mm=document.getElementById('mm');
+  burger.addEventListener('click',()=>mm.classList.toggle('open'));
+  mm.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mm.classList.remove('open')));
+
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){
+    e.target.classList.add('in');
+    e.target.querySelectorAll('[data-count]').forEach(runCount);
+    e.target.querySelectorAll('.bar i').forEach(b=>b.style.width=b.dataset.w);
+    io.unobserve(e.target);
+  }})},{threshold:.18});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  function runCount(el){
+    const t=+el.dataset.count;if(el._done)return;el._done=1;
+    const small=el.querySelector('small');const suf=small?small.outerHTML:'';
+    let s=0,st=performance.now(),dur=1400;
+    function f(now){let p=Math.min((now-st)/dur,1);p=1-Math.pow(1-p,3);
+      el.innerHTML=Math.round(t*p).toLocaleString()+suf;if(p<1)requestAnimationFrame(f);}
+    requestAnimationFrame(f);
+  }
+
+  document.querySelectorAll('.qa button').forEach(b=>b.addEventListener('click',()=>{
+    const qa=b.parentElement,open=qa.classList.contains('open');
+    document.querySelectorAll('.qa').forEach(x=>{x.classList.remove('open');x.querySelector('.ans').style.maxHeight=null});
+    if(!open){qa.classList.add('open');const a=qa.querySelector('.ans');a.style.maxHeight=a.scrollHeight+'px';}
+  }));
+
+  function bookSubmit(e){e.preventDefault();const b=e.target.querySelector('button');b.textContent='✓ Request sent';b.style.background='var(--green)';b.style.borderColor='var(--green)';e.target.reset();setTimeout(()=>{b.innerHTML='Send request →';b.style.background='';b.style.borderColor='';},2600);}
+</script>
+</body>
+</html>

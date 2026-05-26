@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HORSEMEDIC — Mobile Equine Veterinary Care, At Your Stable</title>
+<meta name="description" content="Expert, on-call veterinary care for your horse — delivered at your stable. 24/7 emergency call-out, dentistry, lameness, diagnostics, and preventive wellness." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#0c0b0d;
+    --ink-soft:#16151a;
+    --char:#211f25;
+    --orange:#f26a21;
+    --orange-deep:#d9560f;
+    --orange-glow:rgba(242,106,33,.35);
+    --cream:#f6f1e8;
+    --sand:#ece2d2;
+    --sand-line:#ddd0bb;
+    --paper-ink:#211c16;
+    --muted:#8a8579;
+    --white:#fdfcf9;
+    --display:"Fraunces",Georgia,serif;
+    --body:"Hanken Grotesk",system-ui,sans-serif;
+    --ease:cubic-bezier(.2,.7,.2,1);
+    --maxw:1240px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--body);
+    background:var(--ink);
+    color:var(--cream);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  ::selection{background:var(--orange);color:#fff}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+  .eyebrow{
+    font-family:var(--body);font-weight:700;font-size:.74rem;letter-spacing:.28em;
+    text-transform:uppercase;color:var(--orange);display:inline-flex;align-items:center;gap:.6em;
+  }
+  .eyebrow::before{content:"";width:26px;height:1.5px;background:var(--orange);display:inline-block}
+  h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.04;letter-spacing:-.015em}
+  .display{font-weight:900}
+  .tnum{font-variant-numeric:tabular-nums}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    --bg:var(--orange);--fg:#fff;
+    display:inline-flex;align-items:center;justify-content:center;gap:.6em;
+    font-family:var(--body);font-weight:700;font-size:.98rem;letter-spacing:.01em;
+    padding:1.02em 1.7em;border-radius:100px;background:var(--bg);color:var(--fg);
+    border:1.5px solid var(--bg);cursor:pointer;position:relative;overflow:hidden;
+    transition:transform .25s var(--ease),box-shadow .3s var(--ease),background .25s;
+    box-shadow:0 10px 30px -12px var(--orange-glow);
+    white-space:nowrap;
+  }
+  .btn svg{width:1.05em;height:1.05em;flex:none;transition:transform .3s var(--ease)}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 18px 40px -14px var(--orange-glow)}
+  .btn:hover svg{transform:translateX(3px)}
+  .btn:active{transform:translateY(0)}
+  .btn--ghost{--bg:transparent;--fg:var(--cream);border-color:rgba(246,241,232,.28);box-shadow:none}
+  .btn--ghost:hover{border-color:var(--cream);background:rgba(246,241,232,.06)}
+  .btn--dark{--bg:var(--ink);--fg:var(--white);box-shadow:none;border-color:var(--ink)}
+  .btn--dark:hover{background:#000}
+  .btn--block{width:100%}
+
+  /* ---------- Header ---------- */
+  header.nav{
+    position:fixed;top:0;left:0;right:0;z-index:60;
+    transition:background .4s var(--ease),backdrop-filter .4s,border-color .4s,padding .4s;
+    border-bottom:1px solid transparent;
+  }
+  header.nav.scrolled{
+    background:rgba(12,11,13,.82);backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(255,255,255,.07);
+  }
+  .nav-in{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;max-width:var(--maxw);margin:0 auto}
+  .brand img{height:30px;width:auto}
+  .nav-links{display:flex;align-items:center;gap:34px}
+  .nav-links a.lnk{font-weight:600;font-size:.93rem;color:rgba(246,241,232,.78);transition:color .2s;position:relative}
+  .nav-links a.lnk:hover{color:var(--white)}
+  .nav-links a.lnk::after{content:"";position:absolute;left:0;bottom:-6px;height:2px;width:0;background:var(--orange);transition:width .3s var(--ease)}
+  .nav-links a.lnk:hover::after{width:100%}
+  .nav-cta{display:flex;align-items:center;gap:14px}
+  .nav-call{display:inline-flex;align-items:center;gap:.5em;font-weight:700;font-size:.95rem;color:var(--white)}
+  .nav-call .dot{width:8px;height:8px;border-radius:50%;background:#3ddc84;box-shadow:0 0 0 0 rgba(61,220,132,.6);animation:pulse 2.4s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(61,220,132,.55)}70%{box-shadow:0 0 0 9px rgba(61,220,132,0)}100%{box-shadow:0 0 0 0 rgba(61,220,132,0)}}
+  .burger{display:none;flex-direction:column;gap:5px;background:none;border:0;cursor:pointer;padding:8px}
+  .burger span{width:24px;height:2px;background:var(--cream);transition:.3s}
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;isolation:isolate;padding-bottom:64px}
+  .hero-bg{position:absolute;inset:0;z-index:-2}
+  .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center 30%;filter:saturate(1.05)}
+  .hero-bg::after{content:"";position:absolute;inset:0;
+    background:
+      linear-gradient(180deg,rgba(12,11,13,.72) 0%,rgba(12,11,13,.25) 32%,rgba(12,11,13,.55) 72%,rgba(12,11,13,.96) 100%),
+      linear-gradient(90deg,rgba(12,11,13,.8) 0%,rgba(12,11,13,.1) 60%);
+  }
+  .grain{position:absolute;inset:0;z-index:-1;opacity:.05;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+  .hero-content{position:relative;width:100%}
+  .hero-tag{margin-bottom:26px}
+  .hero h1{font-size:clamp(2.9rem,7.2vw,6.2rem);max-width:16ch;letter-spacing:-.025em}
+  .hero h1 em{font-style:italic;font-weight:500;color:var(--orange)}
+  .hero p.sub{font-size:clamp(1.05rem,1.6vw,1.32rem);max-width:46ch;margin-top:26px;color:rgba(246,241,232,.86);font-weight:400}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:38px}
+  .hero-proof{display:flex;align-items:center;gap:22px;margin-top:40px;flex-wrap:wrap}
+  .stars{display:flex;gap:3px;color:var(--orange)}
+  .hero-proof .pf{font-size:.92rem;color:rgba(246,241,232,.82)}
+  .hero-proof .pf b{color:var(--white)}
+  .vbar{width:1px;height:34px;background:rgba(246,241,232,.2)}
+  .scrollcue{position:absolute;right:28px;bottom:46px;writing-mode:vertical-rl;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(246,241,232,.5);display:flex;align-items:center;gap:14px}
+  .scrollcue::after{content:"";width:1px;height:46px;background:linear-gradient(var(--orange),transparent);animation:drop 2s var(--ease) infinite}
+  @keyframes drop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+  /* ---------- Emergency strip ---------- */
+  .emerg{background:var(--orange);color:#fff;position:relative;z-index:5}
+  .emerg-in{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;padding:15px 28px;text-align:center}
+  .emerg .lbl{font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:.78rem;display:inline-flex;align-items:center;gap:.6em}
+  .emerg .lbl svg{width:1.1em;height:1.1em}
+  .emerg a.tel{font-family:var(--display);font-weight:700;font-size:1.32rem;color:#fff;letter-spacing:.01em;border-bottom:2px solid rgba(255,255,255,.4);transition:border-color .25s}
+  .emerg a.tel:hover{border-color:#fff}
+  .emerg .note{font-size:.86rem;opacity:.9;font-weight:500}
+
+  /* ---------- Section scaffolding ---------- */
+  section{position:relative}
+  .pad{padding:clamp(72px,9vw,128px) 0}
+  .light{background:var(--cream);color:var(--paper-ink)}
+  .light .eyebrow{color:var(--orange-deep)}
+  .light .eyebrow::before{background:var(--orange-deep)}
+  .sec-head{max-width:62ch}
+  .sec-head h2{font-size:clamp(2.1rem,4.4vw,3.5rem);margin-top:20px}
+  .sec-head p{margin-top:18px;font-size:1.08rem;color:#6f6759;max-width:54ch}
+  .light h2 .hl{color:var(--orange-deep);font-style:italic;font-weight:500}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal[data-d="1"]{transition-delay:.08s}
+  .reveal[data-d="2"]{transition-delay:.16s}
+  .reveal[data-d="3"]{transition-delay:.24s}
+  .reveal[data-d="4"]{transition-delay:.32s}
+  .reveal[data-d="5"]{transition-delay:.4s}
+
+  /* ---------- Trust stats band ---------- */
+  .stats{background:var(--ink-soft);border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+  .stat{padding:46px 30px;border-right:1px solid rgba(255,255,255,.06);text-align:center}
+  .stat:last-child{border-right:0}
+  .stat .num{font-family:var(--display);font-weight:700;font-size:clamp(2.4rem,4vw,3.4rem);color:var(--white);line-height:1}
+  .stat .num .u{color:var(--orange)}
+  .stat .cap{margin-top:10px;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(246,241,232,.55);font-weight:600}
+
+  /* ---------- Problem / promise ---------- */
+  .promise{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(40px,6vw,96px);align-items:center}
+  .promise .lead{font-family:var(--display);font-size:clamp(1.7rem,3vw,2.5rem);font-weight:500;line-height:1.22;color:var(--paper-ink)}
+  .promise .lead b{color:var(--orange-deep);font-weight:600}
+  .pain-list{margin-top:36px;display:flex;flex-direction:column;gap:2px}
+  .pain{display:flex;gap:16px;align-items:flex-start;padding:18px 0;border-top:1px solid var(--sand-line)}
+  .pain:last-child{border-bottom:1px solid var(--sand-line)}
+  .pain .ic{flex:none;width:40px;height:40px;border-radius:11px;background:rgba(242,106,33,.12);display:grid;place-items:center;color:var(--orange-deep)}
+  .pain .ic svg{width:20px;height:20px}
+  .pain h4{font-family:var(--body);font-weight:700;font-size:1.02rem;color:var(--paper-ink)}
+  .pain p{font-size:.95rem;color:#76705f;margin-top:2px}
+  .promise-fig{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:4/5;box-shadow:0 40px 70px -40px rgba(33,28,22,.5)}
+  .promise-fig img{width:100%;height:100%;object-fit:cover}
+  .fig-badge{position:absolute;left:18px;bottom:18px;right:18px;background:rgba(12,11,13,.78);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:16px 18px;display:flex;align-items:center;gap:14px}
+  .fig-badge .bk{width:42px;height:42px;border-radius:11px;background:var(--orange);display:grid;place-items:center;color:#fff;flex:none}
+  .fig-badge .bk svg{width:22px;height:22px}
+  .fig-badge .bt{color:var(--white);font-weight:700;font-size:.96rem}
+  .fig-badge .bs{color:rgba(246,241,232,.7);font-size:.82rem}
+
+  /* ---------- Services ---------- */
+  .svc-top{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap}
+  .svc-grid{margin-top:54px;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.07);border-radius:18px;overflow:hidden}
+  .svc{background:var(--ink);padding:38px 32px;transition:background .35s var(--ease);position:relative}
+  .svc:hover{background:var(--char)}
+  .svc .ic{width:52px;height:52px;border-radius:13px;background:rgba(242,106,33,.12);display:grid;place-items:center;color:var(--orange);margin-bottom:24px;transition:.35s var(--ease)}
+  .svc:hover .ic{background:var(--orange);color:#fff;transform:rotate(-6deg)}
+  .svc .ic svg{width:26px;height:26px}
+  .svc h3{font-family:var(--display);font-size:1.32rem;font-weight:600;color:var(--white)}
+  .svc p{margin-top:10px;font-size:.95rem;color:rgba(246,241,232,.62)}
+  .svc .more{margin-top:18px;font-size:.84rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--orange);display:inline-flex;align-items:center;gap:.5em;opacity:0;transform:translateY(6px);transition:.35s var(--ease)}
+  .svc:hover .more{opacity:1;transform:none}
+
+  /* ---------- Feature split (why) ---------- */
+  .why{background:var(--paper-ink);color:var(--cream)}
+  .why-grid{display:grid;grid-template-columns:.92fr 1.08fr;gap:clamp(40px,6vw,90px);align-items:center}
+  .why-fig{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:5/6}
+  .why-fig img{width:100%;height:100%;object-fit:cover;object-position:center}
+  .why-fig::after{content:"";position:absolute;inset:0;background:linear-gradient(200deg,transparent 50%,rgba(33,28,22,.55))}
+  .why h2{font-size:clamp(2rem,4vw,3.2rem)}
+  .why h2 em{color:var(--orange);font-style:italic;font-weight:500}
+  .why .lede{margin-top:20px;color:rgba(246,241,232,.72);font-size:1.06rem;max-width:48ch}
+  .feat{margin-top:40px;display:grid;gap:26px}
+  .feat .row{display:flex;gap:18px;align-items:flex-start}
+  .feat .rk{flex:none;width:46px;height:46px;border-radius:50%;border:1.5px solid var(--orange);color:var(--orange);display:grid;place-items:center;font-family:var(--display);font-weight:700}
+  .feat h4{font-family:var(--body);font-weight:700;font-size:1.1rem;color:var(--white)}
+  .feat p{font-size:.96rem;color:rgba(246,241,232,.62);margin-top:4px;max-width:50ch}
+
+  /* ---------- How it works ---------- */
+  .steps{margin-top:56px;display:grid;grid-template-columns:repeat(3,1fr);gap:30px;position:relative}
+  .step{position:relative;padding-top:30px}
+  .step .n{font-family:var(--display);font-weight:900;font-size:3.4rem;color:var(--orange-deep);line-height:.8;opacity:.9}
+  .step h3{font-size:1.45rem;margin-top:18px;color:var(--paper-ink)}
+  .step p{margin-top:10px;color:#6f6759;font-size:.98rem;max-width:34ch}
+  .step::before{content:"";position:absolute;top:0;left:0;width:100%;height:3px;background:var(--sand-line);border-radius:3px}
+  .step::after{content:"";position:absolute;top:0;left:0;width:46px;height:3px;background:var(--orange);border-radius:3px}
+
+  /* ---------- Performance band ---------- */
+  .band{position:relative;isolation:isolate;padding:clamp(90px,12vw,150px) 0;text-align:center}
+  .band-bg{position:absolute;inset:0;z-index:-2}
+  .band-bg img{width:100%;height:100%;object-fit:cover;object-position:center 35%}
+  .band-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(12,11,13,.92),rgba(12,11,13,.55) 50%,rgba(12,11,13,.92))}
+  .band blockquote{font-family:var(--display);font-style:italic;font-weight:500;font-size:clamp(1.7rem,3.6vw,3rem);line-height:1.2;max-width:20ch;margin:0 auto;color:var(--white)}
+  .band blockquote .q{color:var(--orange)}
+  .band cite{display:block;margin-top:28px;font-style:normal;font-weight:700;letter-spacing:.04em;color:rgba(246,241,232,.85)}
+  .band cite span{display:block;font-weight:500;color:rgba(246,241,232,.55);font-size:.9rem;letter-spacing:.02em;margin-top:3px}
+
+  /* ---------- Testimonials ---------- */
+  .tg{margin-top:54px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .tcard{background:var(--ink);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:32px;display:flex;flex-direction:column;gap:18px;transition:transform .35s var(--ease),border-color .35s}
+  .tcard:hover{transform:translateY(-5px);border-color:rgba(242,106,33,.5)}
+  .tcard .stars{font-size:.9rem}
+  .tcard blockquote{font-family:var(--display);font-size:1.16rem;line-height:1.42;color:var(--cream);font-weight:500}
+  .tcard .who{display:flex;align-items:center;gap:13px;margin-top:auto}
+  .av{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:1.05rem;color:#fff;flex:none}
+  .who .nm{font-weight:700;color:var(--white);font-size:.96rem}
+  .who .ro{font-size:.83rem;color:rgba(246,241,232,.55)}
+
+  /* ---------- Coverage / CTA card ---------- */
+  .booking{background:var(--cream);color:var(--paper-ink)}
+  .book-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,5vw,70px);align-items:center}
+  .book-copy h2{font-size:clamp(2rem,4vw,3.2rem)}
+  .book-copy h2 .hl{color:var(--orange-deep);font-style:italic;font-weight:500}
+  .book-copy p{margin-top:18px;color:#6f6759;font-size:1.06rem;max-width:46ch}
+  .cover-list{margin-top:30px;display:flex;flex-wrap:wrap;gap:10px}
+  .chip{font-size:.85rem;font-weight:600;padding:.5em 1em;border-radius:100px;background:#fff;border:1px solid var(--sand-line);color:#5f594c}
+  .chip b{color:var(--orange-deep)}
+  .form{background:#fff;border:1px solid var(--sand-line);border-radius:22px;padding:clamp(26px,3vw,40px);box-shadow:0 40px 80px -50px rgba(33,28,22,.45)}
+  .form h3{font-size:1.5rem;color:var(--paper-ink)}
+  .form .fsub{color:#8a8273;font-size:.95rem;margin-top:6px}
+  .fld{margin-top:18px}
+  .fld label{display:block;font-size:.8rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#7a7264;margin-bottom:7px}
+  .fld input,.fld select{width:100%;padding:.92em 1em;border:1.5px solid var(--sand-line);border-radius:11px;font-family:var(--body);font-size:1rem;background:var(--cream);color:var(--paper-ink);transition:border-color .2s,box-shadow .2s}
+  .fld input:focus,.fld select:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 4px rgba(242,106,33,.14)}
+  .frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .form .btn{margin-top:24px}
+  .form .fine{margin-top:14px;font-size:.8rem;text-align:center;color:#9a9286}
+
+  /* ---------- FAQ ---------- */
+  .faq-wrap{max-width:860px;margin:54px auto 0}
+  .q{border-top:1px solid rgba(255,255,255,.1)}
+  .q:last-child{border-bottom:1px solid rgba(255,255,255,.1)}
+  .q button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:26px 4px;background:none;border:0;cursor:pointer;text-align:left;color:var(--cream);font-family:var(--display);font-size:1.22rem;font-weight:500}
+  .q .pm{flex:none;width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(246,241,232,.3);display:grid;place-items:center;transition:.35s var(--ease);position:relative}
+  .q .pm::before,.q .pm::after{content:"";position:absolute;background:var(--orange);border-radius:2px}
+  .q .pm::before{width:13px;height:2px}
+  .q .pm::after{width:2px;height:13px;transition:transform .35s var(--ease)}
+  .q.open .pm{border-color:var(--orange);transform:rotate(90deg)}
+  .q.open .pm::after{transform:scaleY(0)}
+  .q .ans{max-height:0;overflow:hidden;transition:max-height .4s var(--ease)}
+  .q .ans p{padding:0 4px 26px;color:rgba(246,241,232,.66);font-size:1rem;max-width:70ch}
+
+  /* ---------- Final CTA ---------- */
+  .final{position:relative;text-align:center;isolation:isolate;overflow:hidden}
+  .final-bg{position:absolute;inset:0;z-index:-2}
+  .final-bg img{width:100%;height:100%;object-fit:cover;object-position:center 40%;filter:grayscale(.2)}
+  .final-bg::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 120% at 50% 0,rgba(12,11,13,.62),rgba(12,11,13,.94))}
+  .final h2{font-size:clamp(2.4rem,6vw,5rem);max-width:18ch;margin:0 auto;color:var(--white)}
+  .final h2 em{font-style:italic;font-weight:500;color:var(--orange)}
+  .final p{margin:22px auto 0;max-width:48ch;color:rgba(246,241,232,.78);font-size:1.1rem}
+  .final-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:40px}
+
+  /* ---------- Footer ---------- */
+  footer{background:#070608;padding:72px 0 36px;border-top:1px solid rgba(255,255,255,.06)}
+  .foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px}
+  .foot-brand img{height:30px;margin-bottom:20px}
+  .foot-brand p{color:rgba(246,241,232,.5);font-size:.94rem;max-width:34ch}
+  .foot-col h5{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(246,241,232,.45);font-weight:700;margin-bottom:16px}
+  .foot-col a,.foot-col span{display:block;color:rgba(246,241,232,.72);font-size:.95rem;margin-bottom:11px;transition:color .2s}
+  .foot-col a:hover{color:var(--orange)}
+  .foot-bot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-top:54px;padding-top:24px;border-top:1px solid rgba(255,255,255,.07);color:rgba(246,241,232,.4);font-size:.85rem}
+
+  /* sticky mobile call */
+  .mcall{position:fixed;left:16px;right:16px;bottom:16px;z-index:70;display:none;
+    box-shadow:0 14px 40px -10px rgba(0,0,0,.6)}
+
+  /* ---------- Responsive ---------- */
+  @media(max-width:980px){
+    .promise,.why-grid,.book-grid{grid-template-columns:1fr}
+    .svc-grid,.tg{grid-template-columns:repeat(2,1fr)}
+    .stats-grid{grid-template-columns:repeat(2,1fr)}
+    .stat:nth-child(2){border-right:0}
+    .stat{border-bottom:1px solid rgba(255,255,255,.06)}
+    .steps{grid-template-columns:1fr;gap:18px}
+    .promise-fig{aspect-ratio:16/11}
+    .why-fig{aspect-ratio:16/12}
+  }
+  @media(max-width:680px){
+    .wrap{padding:0 20px}
+    .nav-links{display:none}
+    .burger{display:flex}
+    .nav-call .txt{display:none}
+    .svc-grid,.tg,.stats-grid{grid-template-columns:1fr}
+    .stat{border-right:0}
+    .frow{grid-template-columns:1fr}
+    .hero{min-height:92svh}
+    .hero-proof .vbar{display:none}
+    .mcall{display:flex}
+    footer .foot-grid{grid-template-columns:1fr 1fr}
+    .scrollcue{display:none}
+    body{padding-bottom:0}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+    .reveal{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <div class="nav-in">
+    <a href="#top" class="brand"><img src="assets/logo.png" alt="HORSEMEDIC" /></a>
+    <nav class="nav-links">
+      <a class="lnk" href="#services">Services</a>
+      <a class="lnk" href="#why">Why Us</a>
+      <a class="lnk" href="#how">How It Works</a>
+      <a class="lnk" href="#voices">Owners</a>
+      <a class="lnk" href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="nav-call" href="tel:+18005544673"><span class="dot"></span><span class="txt">24/7 · +1 800 554 HORSE</span></a>
+      <a class="btn" href="#book">Book a Visit
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-bg"><img src="assets/hero.jpg" alt="A horse grazing in an open pasture" /></div>
+  <div class="grain"></div>
+  <div class="wrap hero-content">
+    <span class="eyebrow hero-tag reveal in">Mobile Equine Veterinary Care</span>
+    <h1 class="reveal in" data-d="1">Your vet, <em>at your stable.</em><br/>Day, night, or emergency.</h1>
+    <p class="sub reveal in" data-d="2">HORSEMEDIC brings hospital-grade equine medicine to your yard — no trailering, no waiting rooms, no stress for your horse. Just expert care where your horse already feels at home.</p>
+    <div class="hero-actions reveal in" data-d="3">
+      <a class="btn" href="#book">Book an Appointment
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="btn btn--ghost" href="tel:+18005544673">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Emergency Line
+      </a>
+    </div>
+    <div class="hero-proof reveal in" data-d="4">
+      <div class="stars" aria-hidden="true">★★★★★</div>
+      <span class="pf"><b>4.9/5</b> from 600+ horse owners</span>
+      <span class="vbar"></span>
+      <span class="pf"><b>RCVS-registered</b> ambulatory vets</span>
+      <span class="vbar"></span>
+      <span class="pf"><b>&lt; 60 min</b> emergency response</span>
+    </div>
+  </div>
+  <div class="scrollcue">Scroll</div>
+</section>
+
+<!-- EMERGENCY STRIP -->
+<div class="emerg">
+  <div class="emerg-in">
+    <span class="lbl">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Horse in distress?
+    </span>
+    <a class="tel" href="tel:+18005544673">+1 800 554 HORSE</a>
+    <span class="note">Answered by a vet, not a machine — 24 hours a day, 365 days a year.</span>
+  </div>
+</div>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="stats-grid">
+    <div class="stat reveal"><div class="num tnum" data-count="12">0</div><div class="cap">Years on the road</div></div>
+    <div class="stat reveal" data-d="1"><div class="num tnum" data-count="8400"><span></span></div><div class="cap">Horses cared for</div></div>
+    <div class="stat reveal" data-d="2"><div class="num tnum"><span data-count="60">0</span><span class="u"> min</span></div><div class="cap">Avg. emergency arrival</div></div>
+    <div class="stat reveal" data-d="3"><div class="num tnum"><span data-count="24">0</span><span class="u">/7</span></div><div class="cap">Always on call</div></div>
+  </div>
+</section>
+
+<!-- PROBLEM / PROMISE -->
+<section class="pad light">
+  <div class="wrap promise">
+    <div class="reveal">
+      <span class="eyebrow">The HORSEMEDIC difference</span>
+      <p class="lead" style="margin-top:22px">A sick or injured horse can't wait for a clinic appointment — and trailering a horse in pain only makes things worse. <b>We bring the clinic to them.</b></p>
+      <div class="pain-list">
+        <div class="pain">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2" stroke-linecap="round"/></svg></span>
+          <div><h4>No more anxious trailer rides</h4><p>Diagnostics, dentistry and treatment delivered in the yard your horse knows.</p></div>
+        </div>
+        <div class="pain">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke-linecap="round"/><path d="m22 4-10 10-3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <div><h4>One vet who knows your herd</h4><p>Continuity of care, full digital records, and a number that reaches a real clinician.</p></div>
+        </div>
+        <div class="pain">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <div><h4>Truly 24/7 emergency cover</h4><p>Colic, lacerations, foaling — a vet is dispatched the moment you call, any hour.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="promise-fig reveal" data-d="2">
+      <img src="assets/vet.jpg" alt="Close portrait of a chestnut horse" />
+      <div class="fig-badge">
+        <span class="bk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 11l3 3L22 4" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div><div class="bt">Fully equipped mobile units</div><div class="bs">Digital X-ray · ultrasound · in-field lab</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="pad" id="services">
+  <div class="wrap">
+    <div class="svc-top">
+      <div class="sec-head reveal">
+        <span class="eyebrow">What we do</span>
+        <h2>Complete equine care,<br/>under one roof — yours.</h2>
+      </div>
+      <a class="btn btn--ghost reveal" data-d="1" href="#book">See call-out fees
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+    <div class="svc-grid">
+      <!-- card -->
+      <div class="svc reveal">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <h3>24/7 Emergency Call-Out</h3>
+        <p>Colic, wounds, choke, foaling complications. A vet dispatched to your yard within the hour, day or night.</p>
+        <span class="more">Always on →</span>
+      </div>
+      <div class="svc reveal" data-d="1">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M19 14a7 7 0 1 1-14 0c0-3 2-5 2-8a5 5 0 0 1 10 0c0 3 2 5 2 8z"/><path d="M9 9h6" stroke-linecap="round"/></svg></span>
+        <h3>Dentistry &amp; Floating</h3>
+        <p>Power and hand floating, oral exams and extractions — sedation on hand for a calm, thorough job.</p>
+        <span class="more">Book a check →</span>
+      </div>
+      <div class="svc reveal" data-d="2">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 20s2-8 8-8 8 8 8 8" stroke-linecap="round"/><circle cx="12" cy="6" r="3"/></svg></span>
+        <h3>Lameness &amp; Performance</h3>
+        <p>Flexion tests, nerve blocks and gait analysis to keep your sport horse sound and competing.</p>
+        <span class="more">Assess soundness →</span>
+      </div>
+      <div class="svc reveal">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 14h2m4 0h2" stroke-linecap="round"/></svg></span>
+        <h3>Digital Imaging</h3>
+        <p>In-field digital radiography and ultrasound — instant diagnostics without leaving the stable.</p>
+        <span class="more">Learn more →</span>
+      </div>
+      <div class="svc reveal" data-d="1">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="m19 14-7 7-7-7a5 5 0 0 1 7-7 5 5 0 0 1 7 7z" stroke-linejoin="round"/></svg></span>
+        <h3>Vaccines &amp; Wellness</h3>
+        <p>Tailored vaccination, worming and annual health plans that keep small problems from becoming big ones.</p>
+        <span class="more">Start a plan →</span>
+      </div>
+      <div class="svc reveal" data-d="2">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M9 11H5a2 2 0 0 0-2 2v7h6m0 0h6m-6 0V7a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v13m0 0h6v-9a2 2 0 0 0-2-2h-4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <h3>Pre-Purchase Vetting</h3>
+        <p>Independent five-stage examinations and Coggins testing — buy your next horse with confidence.</p>
+        <span class="more">Request a vetting →</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="pad why" id="why">
+  <div class="wrap why-grid">
+    <div class="why-fig reveal"><img src="assets/horse-eye.jpg" alt="A white horse cantering at dusk" /></div>
+    <div class="reveal" data-d="1">
+      <span class="eyebrow">Why owners choose us</span>
+      <h2>Hospital medicine,<br/><em>house-call warmth.</em></h2>
+      <p class="lede">We pair board-certified expertise with the patience your horse deserves. Less stress, faster answers, and a vet who treats your animal like their own.</p>
+      <div class="feat">
+        <div class="row">
+          <span class="rk">01</span>
+          <div><h4>Registered, referral-level vets</h4><p>Every clinician is RCVS-registered with advanced equine training — the same standard as a referral hospital, brought to your gate.</p></div>
+        </div>
+        <div class="row">
+          <span class="rk">02</span>
+          <div><h4>A clinic on four wheels</h4><p>Digital X-ray, ultrasound, endoscopy and a field lab mean diagnosis and treatment happen in a single visit.</p></div>
+        </div>
+        <div class="row">
+          <span class="rk">03</span>
+          <div><h4>Transparent, upfront pricing</h4><p>Clear call-out fees and written estimates before we start. No surprises — just honest care.</p></div>
+        </div>
+      </div>
+      <a class="btn" href="#book" style="margin-top:38px">Meet your vet team
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="pad light" id="how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">How it works</span>
+      <h2>Help for your horse in <span class="hl">three simple steps.</span></h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="n">1</div>
+        <h3>Call or book online</h3>
+        <p>Tell us your horse, your location and what's wrong. Routine visit or emergency — we triage instantly.</p>
+      </div>
+      <div class="step reveal" data-d="1">
+        <div class="n">2</div>
+        <h3>We come to you</h3>
+        <p>A fully equipped mobile vet arrives at your stable, examines and treats on-site, and explains every step.</p>
+      </div>
+      <div class="step reveal" data-d="2">
+        <div class="n">3</div>
+        <h3>Ongoing peace of mind</h3>
+        <p>Digital records, follow-up plans and a direct line to the vet who already knows your horse.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PERFORMANCE BAND / QUOTE -->
+<section class="band">
+  <div class="band-bg"><img src="assets/care.jpg" alt="A spirited horse rearing at an event" /></div>
+  <div class="wrap">
+    <blockquote><span class="q">“</span>They saved my mare at 3am. The vet was in our yard in forty minutes — calm, kind, and brilliant.<span class="q">”</span></blockquote>
+    <cite>Eleanor Whitcombe<span>Owner of Marlow Hill Stud · 9 horses</span></cite>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="pad" id="voices">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">From the yard</span>
+      <h2>Trusted by the people<br/>who know horses best.</h2>
+    </div>
+    <div class="tg">
+      <div class="tcard reveal">
+        <div class="stars">★★★★★</div>
+        <blockquote>"Floating, vaccines and a lameness work-up all done in one visit. My boys never even left the field."</blockquote>
+        <div class="who"><span class="av" style="background:#3a6b5e">RH</span><div><div class="nm">Rachel Hartley</div><div class="ro">Eventer · Surrey</div></div></div>
+      </div>
+      <div class="tcard reveal" data-d="1">
+        <div class="stars">★★★★★</div>
+        <blockquote>"The pre-purchase vetting was meticulous. They flagged something two other vets missed and saved me a fortune."</blockquote>
+        <div class="who"><span class="av" style="background:#b5552a">DP</span><div><div class="nm">Daniel Price</div><div class="ro">Showjumping yard owner</div></div></div>
+      </div>
+      <div class="tcard reveal" data-d="2">
+        <div class="stars">★★★★★</div>
+        <blockquote>"As a livery with 30 horses, having HORSEMEDIC on call is the single best decision we've made."</blockquote>
+        <div class="who"><span class="av" style="background:#4a4458">SM</span><div><div class="nm">Sofia Marlowe</div><div class="ro">Greenfield Livery</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING + COVERAGE -->
+<section class="pad booking" id="book">
+  <div class="wrap book-grid">
+    <div class="book-copy reveal">
+      <span class="eyebrow">Book a visit</span>
+      <h2>Get your horse seen — <span class="hl">often the same day.</span></h2>
+      <p>Tell us a little about your horse and we'll confirm a visit window. For anything urgent, call the emergency line and a vet answers immediately.</p>
+      <div class="cover-list">
+        <span class="chip"><b>✓</b> Same-day routine slots</span>
+        <span class="chip"><b>✓</b> 60-mile coverage radius</span>
+        <span class="chip"><b>✓</b> Livery &amp; yard plans</span>
+        <span class="chip"><b>✓</b> Written estimates</span>
+      </div>
+      <div style="margin-top:34px;display:flex;align-items:center;gap:16px">
+        <span class="av" style="width:54px;height:54px;background:var(--orange);font-size:1.4rem">24</span>
+        <div>
+          <div style="font-weight:700;color:var(--paper-ink)">Emergency? Don't wait.</div>
+          <a href="tel:+18005544673" style="color:var(--orange-deep);font-weight:800;font-size:1.15rem;font-family:var(--display)">+1 800 554 HORSE</a>
+        </div>
+      </div>
+    </div>
+    <form class="form reveal" data-d="1" onsubmit="return bookSubmit(event)">
+      <h3>Request a visit</h3>
+      <p class="fsub">Two-minute form. We'll call you back to confirm.</p>
+      <div class="frow">
+        <div class="fld"><label>Your name</label><input required type="text" placeholder="Jane Doe" /></div>
+        <div class="fld"><label>Phone</label><input required type="tel" placeholder="+1 ___ ___ ____" /></div>
+      </div>
+      <div class="frow">
+        <div class="fld"><label>Horse's name</label><input required type="text" placeholder="Comet" /></div>
+        <div class="fld"><label>Yard postcode</label><input required type="text" placeholder="e.g. GU1 4AB" /></div>
+      </div>
+      <div class="fld"><label>What's it about?</label>
+        <select required>
+          <option value="" disabled selected>Choose a reason…</option>
+          <option>Routine / wellness visit</option>
+          <option>Dental check</option>
+          <option>Lameness / soundness</option>
+          <option>Vaccinations</option>
+          <option>Pre-purchase vetting</option>
+          <option>Something's not right — urgent</option>
+        </select>
+      </div>
+      <div class="fld"><label>Urgency</label>
+        <select required>
+          <option>Routine — within the week</option>
+          <option>Soon — within 48 hours</option>
+          <option>Today if possible</option>
+        </select>
+      </div>
+      <button class="btn btn--block" type="submit">Request my visit
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <p class="fine">No charge to enquire. We never share your details.</p>
+    </form>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="pad" id="faq" style="background:var(--ink-soft)">
+  <div class="wrap">
+    <div class="sec-head reveal" style="margin:0 auto;text-align:center">
+      <span class="eyebrow" style="justify-content:center">Questions</span>
+      <h2>Everything you might ask.</h2>
+    </div>
+    <div class="faq-wrap">
+      <div class="q reveal"><button>How quickly can you reach an emergency?<span class="pm"></span></button><div class="ans"><p>Our average arrival time for emergencies within our 60-mile radius is under 60 minutes. When you call, a vet — not a call-centre — triages immediately and dispatches the nearest mobile unit.</p></div></div>
+      <div class="q reveal"><button>What does a call-out cost?<span class="pm"></span></button><div class="ans"><p>Routine visits start with a flat call-out fee based on your postcode, plus the treatment itself. You'll always get a written estimate before any work begins. Yards and liveries can switch to a discounted block plan.</p></div></div>
+      <div class="q reveal"><button>Which areas do you cover?<span class="pm"></span></button><div class="ans"><p>We operate across a 60-mile service radius with multiple mobile units. Not sure if you're in range? Enter your postcode in the booking form and we'll confirm instantly.</p></div></div>
+      <div class="q reveal"><button>Can you handle everything a clinic can?<span class="pm"></span></button><div class="ans"><p>Nearly. Our units carry digital X-ray, ultrasound, endoscopy and a field lab, so most diagnostics and treatments happen on-site. For the rare case needing surgery, we coordinate directly with a referral hospital.</p></div></div>
+      <div class="q reveal"><button>Do you offer payment plans?<span class="pm"></span></button><div class="ans"><p>Yes. We accept all major cards, offer interest-free instalments on larger treatments, and work directly with the main equine insurers to handle claims for you.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="pad final">
+  <div class="final-bg"><img src="assets/foal.jpg" alt="A mare and her foal in a paddock" /></div>
+  <div class="wrap">
+    <h2 class="reveal">Care your horse can <em>feel.</em></h2>
+    <p class="reveal" data-d="1">Join 600+ owners who keep HORSEMEDIC on speed-dial. Book a routine visit, or save the line that answers at 3am.</p>
+    <div class="final-actions reveal" data-d="2">
+      <a class="btn" href="#book">Book a Visit
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="btn btn--ghost" href="tel:+18005544673">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Save the 24/7 Line
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <img src="assets/logo.png" alt="HORSEMEDIC" />
+        <p>Mobile equine veterinary care, delivered to your stable across the region — 24 hours a day.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Services</h5>
+        <a href="#services">Emergency Call-Out</a>
+        <a href="#services">Dentistry</a>
+        <a href="#services">Lameness</a>
+        <a href="#services">Imaging</a>
+        <a href="#services">Pre-Purchase Vetting</a>
+      </div>
+      <div class="foot-col">
+        <h5>Company</h5>
+        <a href="#why">Why HORSEMEDIC</a>
+        <a href="#how">How It Works</a>
+        <a href="#voices">Owner Stories</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="foot-col">
+        <h5>Contact</h5>
+        <a href="tel:+18005544673">+1 800 554 HORSE</a>
+        <a href="mailto:care@horsemedic.vet">care@horsemedic.vet</a>
+        <span>Mon–Sun · Emergencies 24/7</span>
+        <span>60-mile service radius</span>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <span>© 2026 HORSEMEDIC Veterinary Ltd. All rights reserved.</span>
+      <span>Concept landing page · imagery from Unsplash &amp; Flickr (CC)</span>
+    </div>
+  </div>
+</footer>
+
+<!-- sticky mobile call -->
+<a class="btn mcall" href="tel:+18005544673">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  Call the 24/7 Emergency Vet
+</a>
+
+<script>
+  // sticky nav
+  const nav=document.getElementById('nav');
+  const onScroll=()=>nav.classList.toggle('scrolled',window.scrollY>40);
+  onScroll();addEventListener('scroll',onScroll,{passive:true});
+
+  // mobile menu (simple jump-and-close illusion -> reveal links)
+  document.getElementById('burger').addEventListener('click',()=>{
+    const links=document.querySelector('.nav-links');
+    const open=links.style.display==='flex';
+    if(open){links.style.display='';}
+    else{
+      links.style.cssText='display:flex;position:absolute;top:68px;left:0;right:0;flex-direction:column;gap:0;background:rgba(12,11,13,.97);backdrop-filter:blur(14px);padding:10px 28px 22px;border-bottom:1px solid rgba(255,255,255,.08)';
+      links.querySelectorAll('a').forEach(a=>{a.style.padding='14px 0';a.onclick=()=>links.style.display='';});
+    }
+  });
+
+  // reveal on scroll
+  const io=new IntersectionObserver((es)=>{
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+  },{threshold:.16,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal:not(.in)').forEach(el=>io.observe(el));
+
+  // count-up stats
+  const fmt=n=>n>=1000?n.toLocaleString('en-US'):String(n);
+  const counters=document.querySelectorAll('[data-count]');
+  const cio=new IntersectionObserver((es)=>{
+    es.forEach(e=>{
+      if(!e.isIntersecting)return;
+      const el=e.target,target=+el.dataset.count,dur=1400,start=performance.now();
+      const tick=now=>{
+        const p=Math.min((now-start)/dur,1);
+        const v=Math.floor((1-Math.pow(1-p,3))*target);
+        el.textContent=fmt(v)+(target>=1000?'+':'');
+        if(p<1)requestAnimationFrame(tick);else el.textContent=fmt(target)+(target>=1000?'+':'');
+      };
+      requestAnimationFrame(tick);cio.unobserve(el);
+    });
+  },{threshold:.5});
+  counters.forEach(c=>cio.observe(c));
+
+  // FAQ accordion
+  document.querySelectorAll('.q button').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const q=b.parentElement,ans=q.querySelector('.ans'),open=q.classList.contains('open');
+      document.querySelectorAll('.q.open').forEach(o=>{o.classList.remove('open');o.querySelector('.ans').style.maxHeight=null;});
+      if(!open){q.classList.add('open');ans.style.maxHeight=ans.scrollHeight+'px';}
+    });
+  });
+
+  // booking form (demo)
+  function bookSubmit(e){
+    e.preventDefault();
+    const btn=e.target.querySelector('button');
+    btn.innerHTML='✓ Request received — we\'ll call you';
+    btn.style.background='#3a6b5e';btn.style.borderColor='#3a6b5e';
+    e.target.querySelectorAll('input,select').forEach(i=>i.disabled=true);
+    return false;
+  }
+</script>
+</body>
+</html>
